@@ -1,0 +1,9 @@
+@import '~antd/dist/antd.css';
+
+.app-header {
+  text-align: center;
+  background-color: #222;
+  padding: 8px;
+  color: white;
+  font-size: 24px;
+}
