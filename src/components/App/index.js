@@ -5,9 +5,6 @@ import GalleryPlugin from  '../GalleryPlugin';
 import './styles.css';
 import testData from  './test-data.json';
 
-
-// const testData = '../App/test-data.json';
-
 const { Header, Content } = Layout;
 
 class App extends Component {

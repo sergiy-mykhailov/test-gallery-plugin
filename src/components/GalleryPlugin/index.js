@@ -27,29 +27,50 @@ class GalleryPlugin extends Component {
   constructor (props) {
     super(props);
 
+    const data = (Array.isArray(props.feed)) ? props.feed : [];
+
     this.state = {
       pageSize: props['results-per-page'],
       speed: props['auto-rotate-time'],
       slideshow: false,
+      data,
     };
   }
 
+  componentDidMount() {
+    const { feed } = this.props;
+
+    if (typeof feed === 'string') {
+      this.getData(feed)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (typeof nextProps.feed === 'string' && nextProps.feed !== this.props.feed) {
+      this.getData(nextProps.feed)
+    } else if (Array.isArray(nextProps.feed)) {
+      this.setState({
+        data: nextProps.feed,
+      });
+    }
+  }
+
   getData = async (feed) => {
-    // TODO: test this
     const data = await fetch(feed).then(async (response) => {
       if (!response.ok) {
         console.error('Can not get feed:', response.statusText);
         return [];
       }
 
-      const arr = await response.json().then((responseData) => responseData);
-      return arr;
+      return await response.json().then((responseData) => responseData);
     }).catch((err) => {
       console.error('Can not get feed:', err.message);
       return [];
     });
 
-    return data;
+    this.setState({
+      data
+    });
   };
 
   handleSlideshowChange = (slideshow) => {
@@ -113,10 +134,7 @@ class GalleryPlugin extends Component {
   };
 
   render() {
-    const { slideshow } = this.state;
-    const { feed } = this.props;
-
-    const data = (Array.isArray(feed)) ? feed : this.getData(feed);
+    const { slideshow, data } = this.state;
 
     return (
       <div>
